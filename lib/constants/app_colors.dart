@@ -13,6 +13,8 @@ class AppColors {
   static const Color LoginScreenFieldHint = Color(0xFF7C8AAB);
   static const Color fieldBorderColor = Color(0xFFDCE6F8);
   static const Color sideBorderColor = Color(0xFFE1E8F7);
+  static const Color weatherIconYellowColor = Color(0xFFFFF3CC);
+  static const Color weatherIconBlueColor = Color(0xFFE4ECFF);
 
   static const Color HomeScreenBg = Color(0xFFF3F7FF);
 }

@@ -4,9 +4,12 @@ import 'package:get/get.dart';
 import 'package:nimbus/constants/api_constants.dart';
 import 'package:nimbus/controller/api_controller.dart';
 
+import '../model/cities_model.dart';
+import '../model/ciy_model.dart';
+
 class HomeController extends GetxController {
   RxList<dynamic> regions = [].obs;
-  List<String> citiesWeather = ['All', 'Asia', 'Europe', 'Africa', 'North America', 'South America', 'Middle East'];
+  List<City> citiesWeather = [];
   RxInt selectedRegionIndex = 0.obs;
   RxInt citiesCount = 0.obs;
   RxBool isRegionLoading = false.obs;
@@ -16,6 +19,7 @@ class HomeController extends GetxController {
   void onReady() {
     print("On Ready Called");
     getRegions();
+    getCities();
     // TODO: implement onReady
     super.onReady();
   }
@@ -48,6 +52,17 @@ class HomeController extends GetxController {
       // print("ROUND OFF ===> ${doubleValue.toStringAsFixed(0)}");
       isRegionLoading.value = false;
       isCitiesCountLoading.value = false;
+    }
+  }
+
+  getCities({int page = 1}) async {
+    var response = await ApiController().get(url: ApiConstants.citiesApi(page: page));
+    if (response.$1 == 200 || response.$1 == 201) {
+      final cities = citiesFromJson(response.$2);
+      if (cities.data != null) {
+        citiesWeather.addAll(cities.data!);
+        update();
+      }
     }
   }
 }

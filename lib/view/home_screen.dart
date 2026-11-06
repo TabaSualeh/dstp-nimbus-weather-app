@@ -6,6 +6,7 @@ import 'package:nimbus/controller/home_controller.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../constants/app_assets.dart';
 import '../constants/app_colors.dart';
 import '../model/user_model.dart';
 import '../utils/app_model.dart';
@@ -157,18 +158,78 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: homeController.citiesWeather.length,
-                  itemBuilder: (context, index) {
-                    final citiesWeather = homeController.citiesWeather[index];
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.SplashScreenPrimaryText,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    );
-                  },
+              const SizedBox(
+                height: 14,
+              ),
+              GetBuilder<HomeController>(
+                builder: (c) => Expanded(
+                  child: ListView.builder(
+                    itemCount: c.citiesWeather.length,
+                    itemBuilder: (context, index) {
+                      final citiesWeather = c.citiesWeather[index];
+                      if (index < c.citiesWeather.length - 1) {
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 14),
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: appModel.getWeatherIconBg(appModel.getWeatherEnum(citiesWeather.weather!.condition!.icon!)),
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: Image.asset(
+                                  // AppAssets.cloudRainIcon,
+                                  appModel.getWeatherIcon(appModel.getWeatherEnum(citiesWeather.weather!.condition!.icon!)),
+                                  height: 28,
+                                  width: 28,
+                                ),
+                              ),
+                              const SizedBox(width: 14),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      citiesWeather.name!,
+                                      style: GoogleFonts.sora(fontWeight: FontWeight.w700, fontSize: 16, color: AppColors.LoginScreenPrimaryText),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      "${citiesWeather.country!} · ${citiesWeather.region!}",
+                                      style: GoogleFonts.dmSans(fontWeight: FontWeight.w400, fontSize: 13, color: AppColors.LoginScreenSecondaryText),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                width: 4,
+                              ),
+                              Text(
+                                "${citiesWeather.weather!.temperatureC!.toStringAsFixed(0)}°",
+                                style: GoogleFonts.sora(fontWeight: FontWeight.w800, fontSize: 22, color: AppColors.LoginScreenPrimaryText),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        return SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              c.getCities(page: 2);
+                            },
+                            child: Text("Show more"),
+                          ),
+                        );
+                      }
+                    },
+                  ),
                 ),
               ),
             ],

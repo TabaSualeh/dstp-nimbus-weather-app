@@ -32,6 +32,7 @@ class AuthController extends GetxController {
     isLoading.value = true;
     errorMessage.value = '';
     final apiData = await ApiController().get(url: ApiConstants.authApi, isToken: true);
+    print("SPLASH API DATA $apiData");
 
     try {
       if (apiData.$1 == 503) {
