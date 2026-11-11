@@ -14,12 +14,16 @@ class HomeController extends GetxController {
   RxInt citiesCount = 0.obs;
   RxBool isRegionLoading = false.obs;
   RxBool isCitiesCountLoading = false.obs;
+  bool isCitiesLoading = false;
+  int cityPage = 1;
+
+  bool hasNext = true;
 
   @override
   void onReady() {
     print("On Ready Called");
     getRegions();
-    getCities();
+    getAllCities();
     // TODO: implement onReady
     super.onReady();
   }
@@ -34,6 +38,10 @@ class HomeController extends GetxController {
   void changeRegion(int index) {
     if (selectedRegionIndex.value == index) return;
     selectedRegionIndex.value = index;
+    hasNext = true;
+    cityPage = 1;
+    citiesWeather.clear();
+    getAllCities();
   }
 
   getRegions() async {
@@ -45,24 +53,52 @@ class HomeController extends GetxController {
       var regionResponse = jsonDecode(response.$2);
       var listOfRegion = regionResponse['data'];
       for (var region in listOfRegion) {
-        citiesCount = citiesCount + region['count'];
+        // citiesCount = citiesCount + region['count'];
         regions.add(region['name']);
       }
-      // double doubleValue = 23.45453;
-      // print("ROUND OFF ===> ${doubleValue.toStringAsFixed(0)}");
       isRegionLoading.value = false;
       isCitiesCountLoading.value = false;
     }
   }
 
-  getCities({int page = 1}) async {
-    var response = await ApiController().get(url: ApiConstants.citiesApi(page: page));
-    if (response.$1 == 200 || response.$1 == 201) {
-      final cities = citiesFromJson(response.$2);
-      if (cities.data != null) {
-        citiesWeather.addAll(cities.data!);
+  getAllCities() async {
+    if (isCitiesLoading || !hasNext) return;
+
+    isCitiesLoading = true;
+    update();
+
+    try {
+      var queryParams = {
+        'limit': '8',
+        'page': '$cityPage',
+      };
+      if (selectedRegionIndex.value != 0) {
+        queryParams.addAll({'region': '${regions[selectedRegionIndex.value]}'});
+      }
+      var response = await ApiController().get(
+        url: ApiConstants.citiesApi,
+        queryParams: queryParams,
+      );
+
+      if (response.$1 == 200 || response.$1 == 201) {
+        final cities = citiesFromJson(response.$2);
+
+        hasNext = cities.meta!.hasNext!;
+        citiesCount.value = cities.meta!.total!;
+        print("CITIES COUNT ${citiesCount.value}");
+        if (cities.data != null) {
+          citiesWeather.addAll(cities.data!);
+        }
+
+        cityPage++;
+
         update();
       }
+    } catch (e) {
+      print("Cities API Error: $e");
+    } finally {
+      isCitiesLoading = false;
+      update();
     }
   }
 }

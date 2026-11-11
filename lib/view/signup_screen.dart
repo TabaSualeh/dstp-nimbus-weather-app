@@ -25,11 +25,15 @@ class _SignupScreenState extends State<SignupScreen> {
   bool _obscurePassword = true;
   bool loading = false;
 
-  AuthController authController = Get.isRegistered<AuthController>() ? Get.find<AuthController>() : Get.put(AuthController());
+  AuthController authController = Get.isRegistered<AuthController>()
+      ? Get.find<AuthController>()
+      : Get.put(AuthController());
 
   Future<void> Signup() async {
     setState(() => loading = true);
-    if (_nameController.text.length < 2 || _passwordController.text.length < 8 || !(_emailController.text.contains('@'))) {
+    if (_nameController.text.length < 2 ||
+        _passwordController.text.length < 8 ||
+        !(_emailController.text.contains('@'))) {
       setState(() => loading = false);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -92,15 +96,18 @@ class _SignupScreenState extends State<SignupScreen> {
       hintStyle: GoogleFonts.dmSans(
         fontSize: 16,
         fontWeight: FontWeight.w400,
-        color: AppColors.LoginScreenFieldHint,
+        color: AppColors.loginScreenFieldHint,
       ),
       filled: true,
-      fillColor: AppColors.SplashScreenPrimaryText,
+      fillColor: AppColors.splashScreenPrimaryText,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       border: border,
       enabledBorder: border,
       focusedBorder: border.copyWith(
-        borderSide: const BorderSide(color: AppColors.LoginScreenIconBg, width: 1.5),
+        borderSide: const BorderSide(
+          color: AppColors.loginScreenIconBg,
+          width: 1.5,
+        ),
       ),
       suffixIcon: suffixIcon,
     );
@@ -112,7 +119,7 @@ class _SignupScreenState extends State<SignupScreen> {
       style: GoogleFonts.dmSans(
         fontWeight: FontWeight.w600,
         fontSize: 14,
-        color: AppColors.LoginScreenSecondaryText,
+        color: AppColors.loginScreenSecondaryText,
       ),
     );
   }
@@ -120,7 +127,7 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.LoginScreenBg,
+      backgroundColor: AppColors.loginScreenBg,
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
@@ -139,11 +146,11 @@ class _SignupScreenState extends State<SignupScreen> {
                           height: 56,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(18),
-                            color: AppColors.LoginScreenIconBg,
+                            color: AppColors.loginScreenIconBg,
                           ),
                           child: const Icon(
                             Icons.wb_sunny_outlined,
-                            color: AppColors.SplashScreenPrimaryText,
+                            color: AppColors.splashScreenPrimaryText,
                             size: 30,
                           ),
                         ),
@@ -163,11 +170,11 @@ class _SignupScreenState extends State<SignupScreen> {
                             height: 56,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(18),
-                              color: AppColors.LoginScreenIconBg,
+                              color: AppColors.loginScreenIconBg,
                             ),
                             child: const Icon(
                               Icons.keyboard_arrow_left,
-                              color: AppColors.SplashScreenPrimaryText,
+                              color: AppColors.splashScreenPrimaryText,
                               size: 30,
                             ),
                           ),
@@ -183,7 +190,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         fontWeight: FontWeight.w800,
                         fontSize: 28,
                         letterSpacing: -0.5,
-                        color: AppColors.LoginScreenPrimaryText,
+                        color: AppColors.loginScreenPrimaryText,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -193,7 +200,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         fontSize: 15,
                         height: 1.45,
                         fontWeight: FontWeight.w400,
-                        color: AppColors.LoginScreenSecondaryText,
+                        color: AppColors.loginScreenSecondaryText,
                       ),
                     ),
                     const SizedBox(height: 32),
@@ -231,8 +238,10 @@ class _SignupScreenState extends State<SignupScreen> {
                           suffixIcon: IconButton(
                             onPressed: authController.changeObscure,
                             icon: Icon(
-                              authController.obscurePassword.value ? Icons.remove_red_eye_outlined : Icons.visibility_off_outlined,
-                              color: AppColors.LoginScreenSecondaryText,
+                              authController.obscurePassword.value
+                                  ? Icons.remove_red_eye_outlined
+                                  : Icons.visibility_off_outlined,
+                              color: AppColors.loginScreenSecondaryText,
                             ),
                           ),
                         ),
@@ -246,7 +255,9 @@ class _SignupScreenState extends State<SignupScreen> {
                       height: 54,
                       child: ElevatedButton(
                         onPressed: () {
-                          if (_emailController.text.isEmpty || _passwordController.text.isEmpty || _nameController.text.isEmpty) {
+                          if (_emailController.text.isEmpty ||
+                              _passwordController.text.isEmpty ||
+                              _nameController.text.isEmpty) {
                             Get.snackbar(
                               "Error",
                               "All fields are required",
@@ -254,12 +265,16 @@ class _SignupScreenState extends State<SignupScreen> {
                               snackPosition: SnackPosition.TOP,
                             );
                           } else {
-                            authController.signup(email: _emailController.text, password: _passwordController.text, name: _nameController.text);
+                            authController.signup(
+                              email: _emailController.text,
+                              password: _passwordController.text,
+                              name: _nameController.text,
+                            );
                           }
                         },
                         style: ElevatedButton.styleFrom(
                           elevation: 0,
-                          backgroundColor: AppColors.LoginScreenIconBg,
+                          backgroundColor: AppColors.loginScreenIconBg,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(18),
                           ),
@@ -275,19 +290,29 @@ class _SignupScreenState extends State<SignupScreen> {
                                       height: 20,
                                       child: CircularProgressIndicator(
                                         strokeWidth: 2,
-                                        backgroundColor: AppColors.SplashScreenPrimaryText.withValues(alpha: 0.25),
-                                        valueColor: const AlwaysStoppedAnimation<Color>(
-                                          AppColors.SplashScreenPrimaryText,
-                                        ),
+                                        backgroundColor: AppColors
+                                            .splashScreenPrimaryText
+                                            .withValues(alpha: 0.25),
+                                        valueColor:
+                                            const AlwaysStoppedAnimation<Color>(
+                                              AppColors.splashScreenPrimaryText,
+                                            ),
                                       ),
                                     ),
-                                    const Text("Signing up..", style: TextStyle(color: AppColors.SplashScreenPrimaryText, fontSize: 18)),
+                                    const Text(
+                                      "Signing up..",
+                                      style: TextStyle(
+                                        color:
+                                            AppColors.splashScreenPrimaryText,
+                                        fontSize: 18,
+                                      ),
+                                    ),
                                   ],
                                 )
                               : Text(
                                   "Create account",
                                   style: GoogleFonts.dmSans(
-                                    color: AppColors.SplashScreenPrimaryText,
+                                    color: AppColors.splashScreenPrimaryText,
                                     fontWeight: FontWeight.w700,
                                     fontSize: 16,
                                   ),
@@ -306,7 +331,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             "Already have an account? ",
                             style: GoogleFonts.dmSans(
                               fontSize: 15,
-                              color: AppColors.LoginScreenSecondaryText,
+                              color: AppColors.loginScreenSecondaryText,
                             ),
                           ),
                           GestureDetector(
@@ -323,7 +348,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               style: GoogleFonts.dmSans(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w700,
-                                color: AppColors.LoginScreenIconBg,
+                                color: AppColors.loginScreenIconBg,
                               ),
                             ),
                           ),

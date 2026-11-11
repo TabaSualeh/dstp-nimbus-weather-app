@@ -13,9 +13,7 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
     return Scaffold(
       body: Center(
         child: Column(
-          children: [
-            Text("Favourite Screen")
-          ],
+          children: [Text("Favourite Screen")],
         ),
       ),
     );

@@ -18,20 +18,31 @@ class AuthController extends GetxController {
   @override
   void onInit() {
     // TODO: implement onInit
+    print("ON INIT CALLED");
     super.onInit();
   }
 
   @override
   void onReady() {
     statusCheck();
+    print("ON READY CALLED");
     // TODO: implement onReady
     super.onReady();
+  }
+
+  @override
+  void onClose() {
+    print("ON CLOSED CALLED");
+    super.onClose();
   }
 
   Future<void> statusCheck() async {
     isLoading.value = true;
     errorMessage.value = '';
-    final apiData = await ApiController().get(url: ApiConstants.authApi, isToken: true);
+    final apiData = await ApiController().get(
+      url: ApiConstants.authApi,
+      isToken: true,
+    );
     print("SPLASH API DATA $apiData");
 
     try {
@@ -84,14 +95,21 @@ class AuthController extends GetxController {
     } else if (response.$1 >= 400 || response.$1 <= 499) {
       var jsonResponse = jsonDecode(response.$2);
       print(jsonResponse['error']['message']);
-      Get.snackbar(jsonResponse['error']['code'], jsonResponse['error']['message']);
+      Get.snackbar(
+        jsonResponse['error']['code'],
+        jsonResponse['error']['message'],
+      );
     } else {
       Get.snackbar("Error", "Something went wrong");
     }
     isLoading.value = false;
   }
 
-  signup({required String email, required String password, required String name}) async {
+  signup({
+    required String email,
+    required String password,
+    required String name,
+  }) async {
     isLoading.value = true;
     var response = await ApiController().post(
       url: ApiConstants.signupApi,

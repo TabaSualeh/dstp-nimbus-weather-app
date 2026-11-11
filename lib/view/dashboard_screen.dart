@@ -24,7 +24,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   void initState() {
-    _screens.addAll([HomeScreen(user: widget.user), const FavouritesScreen(), const ProfileScreen()]);
+    _screens.addAll([
+      HomeScreen(user: widget.user),
+      const FavouritesScreen(),
+      const ProfileScreen(),
+    ]);
     // TODO: implement initState
     super.initState();
   }
@@ -34,19 +38,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       body: _screens[currIndex],
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: AppColors.splashScreenPrimaryText,
         currentIndex: currIndex,
         onTap: (value) {
           currIndex = value;
           setState(() {});
         },
-        selectedItemColor: AppColors.LoginScreenIconBg,
+        selectedItemColor: AppColors.loginScreenIconBg,
 
         items: [
           const BottomNavigationBarItem(
             icon: Icon(Icons.explore_outlined),
             label: "Explore",
           ),
-          const BottomNavigationBarItem(icon: Icon(Icons.favorite_border_outlined), label: "Favorites"),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.favorite_border_outlined),
+            label: "Favorites",
+          ),
           const BottomNavigationBarItem(
             icon: Icon(
               Icons.person_2_outlined,

@@ -49,7 +49,9 @@ class UserClass {
     id: json["id"],
     name: json["name"],
     email: json["email"],
-    createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
+    createdAt: json["createdAt"] == null
+        ? null
+        : DateTime.parse(json["createdAt"]),
   );
 
   Map<String, dynamic> toJson() => {

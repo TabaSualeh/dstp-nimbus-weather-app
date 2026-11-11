@@ -25,25 +25,37 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.SplashScreenBg,
+      backgroundColor: AppColors.splashScreenBg,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               "Nimbus",
-              style: GoogleFonts.sora(fontWeight: FontWeight.w800, fontSize: 44, color: AppColors.SplashScreenPrimaryText),
+              style: GoogleFonts.sora(
+                fontWeight: FontWeight.w800,
+                fontSize: 44,
+                color: AppColors.splashScreenPrimaryText,
+              ),
             ),
             Text(
               "Weather & city guide",
-              style: GoogleFonts.dmSans(color: AppColors.SplashScreensSecondaryText, fontSize: 16, fontWeight: FontWeight.w400),
+              style: GoogleFonts.dmSans(
+                color: AppColors.splashScreensSecondaryText,
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              ),
             ),
             SizedBox(
               height: 20,
             ),
             Text(
               "Checking your session...",
-              style: GoogleFonts.dmMono(fontSize: 13, fontWeight: FontWeight.w400, color: AppColors.SplashScreensSessionText),
+              style: GoogleFonts.dmMono(
+                fontSize: 13,
+                fontWeight: FontWeight.w400,
+                color: AppColors.splashScreensSessionText,
+              ),
             ),
             const SizedBox(
               height: 20,
@@ -53,9 +65,11 @@ class _SplashScreenState extends State<SplashScreen> {
                 // Loading State
                 return CircularProgressIndicator(
                   strokeWidth: 4,
-                  backgroundColor: AppColors.SplashScreenPrimaryText.withValues(alpha: 0.25),
+                  backgroundColor: AppColors.splashScreenPrimaryText.withValues(
+                    alpha: 0.25,
+                  ),
                   valueColor: const AlwaysStoppedAnimation<Color>(
-                    AppColors.SplashScreenPrimaryText,
+                    AppColors.splashScreenPrimaryText,
                   ),
                 );
               }

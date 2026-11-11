@@ -20,7 +20,11 @@ class ApiController {
     await prefs.setString(Constants.tokenKey, value);
   }
 
-  Future<(int statusCode, String body)> get({required String url, bool isToken = false}) async {
+  Future<(int statusCode, String body)> get({
+    required String url,
+    bool isToken = false,
+    Map<String, String>? queryParams,
+  }) async {
     bool connected = await Get.find<AppModel>().isInternet();
 
     if (!connected) {
@@ -36,6 +40,10 @@ class ApiController {
 
     try {
       Uri uri = Uri.parse(url);
+      if (queryParams != null) {
+        uri = uri.replace(queryParameters: queryParams);
+      }
+      print("URI ======> $uri");
       var response = await http.get(uri, headers: headers);
       return (response.statusCode, response.body);
     } catch (e) {

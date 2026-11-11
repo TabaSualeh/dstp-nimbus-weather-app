@@ -103,7 +103,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController(text: 'demo@nimbus.app');
   final _passwordController = TextEditingController(text: 'demo1234');
 
-  AuthController authController = Get.isRegistered<AuthController>() ? Get.find<AuthController>() : Get.put(AuthController());
+  AuthController authController = Get.isRegistered<AuthController>()
+      ? Get.find<AuthController>()
+      : Get.put(AuthController());
 
   InputDecoration _fieldDecoration(String hint, {Widget? suffixIcon}) {
     final border = OutlineInputBorder(
@@ -115,15 +117,15 @@ class _LoginScreenState extends State<LoginScreen> {
       hintStyle: GoogleFonts.dmSans(
         fontSize: 16,
         fontWeight: FontWeight.w400,
-        color: AppColors.LoginScreenFieldHint,
+        color: AppColors.loginScreenFieldHint,
       ),
       filled: true,
-      fillColor: AppColors.SplashScreenPrimaryText,
+      fillColor: AppColors.splashScreenPrimaryText,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       border: border,
       enabledBorder: border,
       focusedBorder: border.copyWith(
-        borderSide: BorderSide(color: AppColors.LoginScreenIconBg, width: 1.5),
+        borderSide: BorderSide(color: AppColors.loginScreenIconBg, width: 1.5),
       ),
       suffixIcon: suffixIcon,
     );
@@ -135,7 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
       style: GoogleFonts.dmSans(
         fontWeight: FontWeight.w600,
         fontSize: 14,
-        color: AppColors.LoginScreenSecondaryText,
+        color: AppColors.loginScreenSecondaryText,
       ),
     );
   }
@@ -143,7 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.LoginScreenBg,
+      backgroundColor: AppColors.loginScreenBg,
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
@@ -160,11 +162,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 56,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(18),
-                        color: AppColors.LoginScreenIconBg,
+                        color: AppColors.loginScreenIconBg,
                       ),
                       child: Icon(
                         Icons.wb_sunny_outlined,
-                        color: AppColors.SplashScreenPrimaryText,
+                        color: AppColors.splashScreenPrimaryText,
                         size: 30,
                       ),
                     ),
@@ -177,7 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontWeight: FontWeight.w800,
                         fontSize: 28,
                         letterSpacing: -0.5,
-                        color: AppColors.LoginScreenPrimaryText,
+                        color: AppColors.loginScreenPrimaryText,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -187,7 +189,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontSize: 15,
                         height: 1.45,
                         fontWeight: FontWeight.w400,
-                        color: AppColors.LoginScreenSecondaryText,
+                        color: AppColors.loginScreenSecondaryText,
                       ),
                     ),
                     const SizedBox(height: 32),
@@ -216,8 +218,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           suffixIcon: IconButton(
                             onPressed: authController.changeObscure,
                             icon: Icon(
-                              authController.obscurePassword.value ? Icons.remove_red_eye_outlined : Icons.visibility_off_outlined,
-                              color: AppColors.LoginScreenSecondaryText,
+                              authController.obscurePassword.value
+                                  ? Icons.remove_red_eye_outlined
+                                  : Icons.visibility_off_outlined,
+                              color: AppColors.loginScreenSecondaryText,
                             ),
                           ),
                         ),
@@ -233,7 +237,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 54,
                         child: ElevatedButton(
                           onPressed: () {
-                            if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+                            if (_emailController.text.isEmpty ||
+                                _passwordController.text.isEmpty) {
                               Get.snackbar(
                                 "Error",
                                 "Email and Password are required",
@@ -241,12 +246,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                 snackPosition: SnackPosition.TOP,
                               );
                             } else {
-                              authController.login(email: _emailController.text, password: _passwordController.text);
+                              authController.login(
+                                email: _emailController.text,
+                                password: _passwordController.text,
+                              );
                             }
                           },
                           style: ElevatedButton.styleFrom(
                             elevation: 0,
-                            backgroundColor: AppColors.LoginScreenIconBg,
+                            backgroundColor: AppColors.loginScreenIconBg,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18),
                             ),
@@ -261,19 +269,29 @@ class _LoginScreenState extends State<LoginScreen> {
                                       height: 20,
                                       child: CircularProgressIndicator(
                                         strokeWidth: 2,
-                                        backgroundColor: AppColors.SplashScreenPrimaryText.withValues(alpha: 0.25),
-                                        valueColor: const AlwaysStoppedAnimation<Color>(
-                                          AppColors.SplashScreenPrimaryText,
-                                        ),
+                                        backgroundColor: AppColors
+                                            .splashScreenPrimaryText
+                                            .withValues(alpha: 0.25),
+                                        valueColor:
+                                            const AlwaysStoppedAnimation<Color>(
+                                              AppColors.splashScreenPrimaryText,
+                                            ),
                                       ),
                                     ),
-                                    const Text("Logging in..", style: TextStyle(color: AppColors.SplashScreenPrimaryText, fontSize: 18)),
+                                    const Text(
+                                      "Logging in..",
+                                      style: TextStyle(
+                                        color:
+                                            AppColors.splashScreenPrimaryText,
+                                        fontSize: 18,
+                                      ),
+                                    ),
                                   ],
                                 )
                               : Text(
                                   "Log in",
                                   style: GoogleFonts.dmSans(
-                                    color: AppColors.SplashScreenPrimaryText,
+                                    color: AppColors.splashScreenPrimaryText,
                                     fontWeight: FontWeight.w700,
                                     fontSize: 16,
                                   ),
@@ -292,7 +310,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             "New to Nimbus? ",
                             style: GoogleFonts.dmSans(
                               fontSize: 15,
-                              color: AppColors.LoginScreenSecondaryText,
+                              color: AppColors.loginScreenSecondaryText,
                             ),
                           ),
                           GestureDetector(
@@ -309,7 +327,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               style: GoogleFonts.dmSans(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w700,
-                                color: AppColors.LoginScreenIconBg,
+                                color: AppColors.loginScreenIconBg,
                               ),
                             ),
                           ),

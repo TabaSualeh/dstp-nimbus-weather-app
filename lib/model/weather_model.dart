@@ -11,7 +11,9 @@ class Weather {
 
   factory Weather.fromJson(Map<String, dynamic> json) => Weather(
     temperatureC: json["temperatureC"]?.toDouble(),
-    condition: json["condition"] == null ? null : Condition.fromJson(json["condition"]),
+    condition: json["condition"] == null
+        ? null
+        : Condition.fromJson(json["condition"]),
   );
 
   Map<String, dynamic> toJson() => {

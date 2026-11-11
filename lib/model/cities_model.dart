@@ -21,12 +21,16 @@ class Cities {
   });
 
   factory Cities.fromJson(Map<String, dynamic> json) => Cities(
-    data: json["data"] == null ? [] : List<City>.from(json["data"]!.map((x) => City.fromJson(x))),
+    data: json["data"] == null
+        ? []
+        : List<City>.from(json["data"]!.map((x) => City.fromJson(x))),
     meta: json["meta"] == null ? null : Meta.fromJson(json["meta"]),
   );
 
   Map<String, dynamic> toJson() => {
-    "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x.toJson())),
+    "data": data == null
+        ? []
+        : List<dynamic>.from(data!.map((x) => x.toJson())),
     "meta": meta?.toJson(),
   };
 }

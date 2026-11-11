@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:nimbus/controller/home_controller.dart';
+import 'package:nimbus/widget/region_card_shimmer.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -10,6 +11,7 @@ import '../constants/app_assets.dart';
 import '../constants/app_colors.dart';
 import '../model/user_model.dart';
 import '../utils/app_model.dart';
+import '../widget/city_card_shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.user});
@@ -22,6 +24,21 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController _searchController = TextEditingController();
+  ScrollController _scrollController = ScrollController();
+  double _scrollThreshold = 150;
+
+  // %
+  @override
+  void initState() {
+    _scrollController.addListener(() {
+      if (!_scrollController.hasClients) return;
+      if (_scrollController.position.extentAfter <= _scrollThreshold && homeController.hasNext) {
+        homeController.getAllCities();
+      }
+    });
+    // TODO: implement initState
+    super.initState();
+  }
 
   HomeController homeController = Get.find<HomeController>();
   AppModel appModel = Get.find<AppModel>();
@@ -36,15 +53,15 @@ class _HomeScreenState extends State<HomeScreen> {
       hintStyle: GoogleFonts.dmSans(
         fontSize: 16,
         fontWeight: FontWeight.w400,
-        color: AppColors.LoginScreenFieldHint,
+        color: AppColors.loginScreenFieldHint,
       ),
       filled: true,
-      fillColor: AppColors.SplashScreenPrimaryText,
+      fillColor: AppColors.splashScreenPrimaryText,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       border: border,
       enabledBorder: border,
       focusedBorder: border.copyWith(
-        borderSide: BorderSide(color: AppColors.LoginScreenIconBg, width: 1.5),
+        borderSide: BorderSide(color: AppColors.loginScreenIconBg, width: 1.5),
       ),
       prefixIcon: prefixIcon,
     );
@@ -53,7 +70,32 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.HomeScreenBg,
+      backgroundColor: AppColors.homeScreenBg,
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        spacing: 30,
+        children: [
+          FloatingActionButton(
+            heroTag: UniqueKey(),
+            onPressed: () {
+              // _scrollController.jumpTo(0);
+              _scrollController.animateTo(
+                0,
+                duration: Duration(milliseconds: 500),
+                curve: Curves.bounceIn,
+              );
+            },
+            child: Icon(Icons.arrow_upward),
+          ),
+          FloatingActionButton(
+            heroTag: UniqueKey(),
+            onPressed: () {
+              _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+            },
+            child: Icon(Icons.arrow_downward),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -68,19 +110,31 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Text(
                         appModel.getGreeting(),
-                        style: GoogleFonts.dmSans(fontSize: 14, fontWeight: FontWeight.w400, color: AppColors.LoginScreenSecondaryText),
+                        style: GoogleFonts.dmSans(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.loginScreenSecondaryText,
+                        ),
                       ),
                       Text(
                         widget.user.user!.name!,
-                        style: GoogleFonts.sora(fontSize: 24, fontWeight: FontWeight.w800, color: AppColors.LoginScreenPrimaryText),
+                        style: GoogleFonts.sora(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.loginScreenPrimaryText,
+                        ),
                       ),
                     ],
                   ),
                   CircleAvatar(
                     radius: 22,
-                    backgroundColor: AppColors.LoginScreenIconBg,
+                    backgroundColor: AppColors.loginScreenIconBg,
                     child: Text(
-                      style: GoogleFonts.dmSans(fontSize: 15, fontWeight: FontWeight.w700, color: Colors.white),
+                      style: GoogleFonts.dmSans(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
                       widget.user.user!.name!.trim().split(' ').map((l) => l[0]).join().toUpperCase(),
                     ),
                   ),
@@ -88,33 +142,16 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               TextField(
                 controller: _searchController,
-                decoration: _fieldDecoration("Search cities or countries", prefixIcon: Icon(Icons.search)),
+                decoration: _fieldDecoration(
+                  "Search cities or countries",
+                  prefixIcon: Icon(Icons.search),
+                ),
               ),
 
               Obx(() {
                 final selected = homeController.selectedRegionIndex.value;
                 return homeController.isRegionLoading.value
-                    ? SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Shimmer.fromColors(
-                          period: Duration(milliseconds: 1000),
-                          // Colors.grey.shade300
-                          // Colors.grey.shade100
-                          baseColor: Colors.grey.shade400,
-                          highlightColor: Colors.grey.shade200,
-                          child: Row(
-                            children: [
-                              regionChipShimmer(),
-                              regionChipShimmer(),
-                              regionChipShimmer(),
-                              regionChipShimmer(),
-                              regionChipShimmer(),
-                              regionChipShimmer(),
-                              regionChipShimmer(),
-                            ],
-                          ),
-                        ),
-                      )
+                    ? const RegionShimmer()
                     : SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
@@ -124,10 +161,17 @@ class _HomeScreenState extends State<HomeScreen> {
                               GestureDetector(
                                 onTap: () => homeController.changeRegion(i),
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
-                                  margin: const EdgeInsets.only(left: 15, top: 14, bottom: 14),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 9,
+                                  ),
+                                  margin: const EdgeInsets.only(
+                                    left: 15,
+                                    top: 14,
+                                    bottom: 14,
+                                  ),
                                   decoration: BoxDecoration(
-                                    color: i == selected ? AppColors.LoginScreenIconBg : AppColors.SplashScreenPrimaryText,
+                                    color: i == selected ? AppColors.loginScreenIconBg : AppColors.splashScreenPrimaryText,
                                     borderRadius: BorderRadius.circular(99),
                                     border: Border.all(
                                       color: i == selected ? Colors.blue : AppColors.sideBorderColor,
@@ -135,7 +179,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   child: Text(
                                     homeController.regions[i],
-                                    style: TextStyle(color: i == selected ? AppColors.SplashScreenPrimaryText : null),
+                                    style: TextStyle(
+                                      color: i == selected ? AppColors.splashScreenPrimaryText : null,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -148,12 +194,20 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Text(
                     "Cities",
-                    style: GoogleFonts.sora(fontWeight: FontWeight.w700, fontSize: 18, color: AppColors.LoginScreenPrimaryText),
+                    style: GoogleFonts.sora(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 18,
+                      color: AppColors.loginScreenPrimaryText,
+                    ),
                   ),
                   Obx(
                     () => Text(
                       homeController.isCitiesCountLoading.value ? 'Loading....' : "${homeController.citiesCount} results",
-                      style: GoogleFonts.dmSans(fontWeight: FontWeight.w400, fontSize: 13, color: AppColors.LoginScreenSecondaryText),
+                      style: GoogleFonts.dmSans(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 13,
+                        color: AppColors.loginScreenSecondaryText,
+                      ),
                     ),
                   ),
                 ],
@@ -161,93 +215,133 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(
                 height: 14,
               ),
+
               GetBuilder<HomeController>(
                 builder: (c) => Expanded(
-                  child: ListView.builder(
-                    itemCount: c.citiesWeather.length,
-                    itemBuilder: (context, index) {
-                      final citiesWeather = c.citiesWeather[index];
-                      if (index < c.citiesWeather.length - 1) {
-                        return Container(
-                          margin: const EdgeInsets.only(bottom: 14),
-                          padding: const EdgeInsets.all(14),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  color: appModel.getWeatherIconBg(appModel.getWeatherEnum(citiesWeather.weather!.condition!.icon!)),
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                child: Image.asset(
-                                  // AppAssets.cloudRainIcon,
-                                  appModel.getWeatherIcon(appModel.getWeatherEnum(citiesWeather.weather!.condition!.icon!)),
-                                  height: 28,
-                                  width: 28,
-                                ),
-                              ),
-                              const SizedBox(width: 14),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      citiesWeather.name!,
-                                      style: GoogleFonts.sora(fontWeight: FontWeight.w700, fontSize: 16, color: AppColors.LoginScreenPrimaryText),
-                                    ),
-                                    const SizedBox(height: 2),
-                                    Text(
-                                      "${citiesWeather.country!} · ${citiesWeather.region!}",
-                                      style: GoogleFonts.dmSans(fontWeight: FontWeight.w400, fontSize: 13, color: AppColors.LoginScreenSecondaryText),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                width: 4,
-                              ),
-                              Text(
-                                "${citiesWeather.weather!.temperatureC!.toStringAsFixed(0)}°",
-                                style: GoogleFonts.sora(fontWeight: FontWeight.w800, fontSize: 22, color: AppColors.LoginScreenPrimaryText),
-                              ),
-                            ],
-                          ),
-                        );
-                      } else {
-                        return SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              c.getCities(page: 2);
-                            },
-                            child: Text("Show more"),
-                          ),
+                  child: Builder(
+                    builder: (context) {
+                      // JumpTo, animateTo, extentAfter,
+                      // Initial loading shimmer
+                      if (c.citiesWeather.isEmpty && c.isCitiesLoading) {
+                        return ListView.builder(
+                          itemCount: 5,
+                          itemBuilder: (context, index) {
+                            return const CityCardShimmer();
+                          },
                         );
                       }
+
+                      if (c.citiesWeather.isEmpty && !c.isCitiesLoading) {
+                        return const Center(
+                          child: Text("No cities found"),
+                        );
+                      }
+
+                      return ListView.builder(
+                        controller: _scrollController,
+                        itemCount: c.citiesWeather.length + (c.isCitiesLoading ? 1 : 0),
+
+                        // itemCount: c.citiesWeather.length,
+                        itemBuilder: (context, index) {
+                          if (index == c.citiesWeather.length) {
+                            if (c.isCitiesLoading) {
+                              return const CityCardShimmer();
+                            }
+                            // return SizedBox(
+                            //   width: double.infinity,
+                            //   child: ElevatedButton(
+                            //     onPressed: c.isCitiesLoading
+                            //         ? null
+                            //         : () {
+                            //             c.getCities();
+                            //           },
+                            //     child: const Text("Show more"),
+                            //   ),
+                            // );
+                          }
+
+                          final city = c.citiesWeather[index];
+
+                          return Container(
+                            margin: const EdgeInsets.only(bottom: 14),
+                            padding: const EdgeInsets.all(14),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: BoxDecoration(
+                                    color: appModel.getWeatherIconBg(
+                                      appModel.getWeatherEnum(
+                                        city.weather!.condition!.icon!,
+                                      ),
+                                    ),
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: Image.asset(
+                                    appModel.getWeatherIcon(
+                                      appModel.getWeatherEnum(
+                                        city.weather!.condition!.icon!,
+                                      ),
+                                    ),
+                                    height: 28,
+                                    width: 28,
+                                  ),
+                                ),
+
+                                const SizedBox(width: 14),
+
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        city.name!,
+                                        style: GoogleFonts.sora(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 16,
+                                          color: AppColors.loginScreenPrimaryText,
+                                        ),
+                                      ),
+
+                                      const SizedBox(height: 2),
+
+                                      Text(
+                                        "${city.country!} · ${city.region!}",
+                                        style: GoogleFonts.dmSans(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 13,
+                                          color: AppColors.loginScreenSecondaryText,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                const SizedBox(width: 4),
+
+                                Text(
+                                  "${city.weather!.temperatureC!.toStringAsFixed(0)}°",
+                                  style: GoogleFonts.sora(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 22,
+                                    color: AppColors.loginScreenPrimaryText,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
                     },
                   ),
                 ),
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget regionChipShimmer([double horizontalPadding = 30]) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 14),
-      margin: const EdgeInsets.only(left: 15, top: 14, bottom: 14),
-      decoration: BoxDecoration(
-        color: Colors.green,
-        borderRadius: BorderRadius.circular(99),
-        border: Border.all(
-          color: AppColors.sideBorderColor,
         ),
       ),
     );
