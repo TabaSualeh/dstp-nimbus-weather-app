@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:nimbus/constants/api_constants.dart';
+import 'package:nimbus/controller/api_controller.dart';
 import 'package:nimbus/controller/home_controller.dart';
 import 'package:nimbus/widget/region_card_shimmer.dart';
 import 'package:shimmer/shimmer.dart';
@@ -30,6 +34,13 @@ class _HomeScreenState extends State<HomeScreen> {
   // %
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((Duration time) {
+      print("TIMESTAMP $time");
+      print("TIME IN ms ${time.inMilliseconds}");
+
+      // Safely execute code after the frame is rendered
+    });
+
     _scrollController.addListener(() {
       if (!_scrollController.hasClients) return;
       if (_scrollController.position.extentAfter <= _scrollThreshold && homeController.hasNext) {
@@ -90,7 +101,12 @@ class _HomeScreenState extends State<HomeScreen> {
           FloatingActionButton(
             heroTag: UniqueKey(),
             onPressed: () {
-              _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+              _scrollController.animateTo(
+                _scrollController.position.maxScrollExtent,
+                duration: Duration(milliseconds: 500),
+                curve: Curves.bounceIn,
+              );
+              // _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
             },
             child: Icon(Icons.arrow_downward),
           ),
@@ -142,6 +158,9 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               TextField(
                 controller: _searchController,
+                onChanged: (value) {
+                  homeController.searchText.value = value;
+                },
                 decoration: _fieldDecoration(
                   "Search cities or countries",
                   prefixIcon: Icon(Icons.search),
@@ -202,7 +221,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Obx(
                     () => Text(
-                      homeController.isCitiesCountLoading.value ? 'Loading....' : "${homeController.citiesCount} results",
+                      homeController.isCitiesCountLoading.value ? 'Loading....' : "${homeController.citiesWeather.length} results",
                       style: GoogleFonts.dmSans(
                         fontWeight: FontWeight.w400,
                         fontSize: 13,
@@ -262,76 +281,81 @@ class _HomeScreenState extends State<HomeScreen> {
 
                           final city = c.citiesWeather[index];
 
-                          return Container(
-                            margin: const EdgeInsets.only(bottom: 14),
-                            padding: const EdgeInsets.all(14),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(16),
-                                  decoration: BoxDecoration(
-                                    color: appModel.getWeatherIconBg(
-                                      appModel.getWeatherEnum(
-                                        city.weather!.condition!.icon!,
-                                      ),
-                                    ),
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  child: Image.asset(
-                                    appModel.getWeatherIcon(
-                                      appModel.getWeatherEnum(
-                                        city.weather!.condition!.icon!,
-                                      ),
-                                    ),
-                                    height: 28,
-                                    width: 28,
-                                  ),
-                                ),
-
-                                const SizedBox(width: 14),
-
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        city.name!,
-                                        style: GoogleFonts.sora(
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 16,
-                                          color: AppColors.loginScreenPrimaryText,
+                          return GestureDetector(
+                            onTap: () {
+                              print("CITY DATA======> $city");
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.only(bottom: 14),
+                              padding: const EdgeInsets.all(14),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(16),
+                                    decoration: BoxDecoration(
+                                      color: appModel.getWeatherIconBg(
+                                        appModel.getWeatherEnum(
+                                          city.weather!.condition!.icon!,
                                         ),
                                       ),
-
-                                      const SizedBox(height: 2),
-
-                                      Text(
-                                        "${city.country!} · ${city.region!}",
-                                        style: GoogleFonts.dmSans(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 13,
-                                          color: AppColors.loginScreenSecondaryText,
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    child: Image.asset(
+                                      appModel.getWeatherIcon(
+                                        appModel.getWeatherEnum(
+                                          city.weather!.condition!.icon!,
                                         ),
                                       ),
-                                    ],
+                                      height: 28,
+                                      width: 28,
+                                    ),
                                   ),
-                                ),
 
-                                const SizedBox(width: 4),
+                                  const SizedBox(width: 14),
 
-                                Text(
-                                  "${city.weather!.temperatureC!.toStringAsFixed(0)}°",
-                                  style: GoogleFonts.sora(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 22,
-                                    color: AppColors.loginScreenPrimaryText,
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          city.name!,
+                                          style: GoogleFonts.sora(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 16,
+                                            color: AppColors.loginScreenPrimaryText,
+                                          ),
+                                        ),
+
+                                        const SizedBox(height: 2),
+
+                                        Text(
+                                          "${city.country!} · ${city.region!}",
+                                          style: GoogleFonts.dmSans(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 13,
+                                            color: AppColors.loginScreenSecondaryText,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
+
+                                  const SizedBox(width: 4),
+
+                                  Text(
+                                    "${city.weather!.temperatureC!.toStringAsFixed(0)}°",
+                                    style: GoogleFonts.sora(
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 22,
+                                      color: AppColors.loginScreenPrimaryText,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           );
                         },
