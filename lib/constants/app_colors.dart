@@ -16,5 +16,18 @@ class AppColors {
   static const Color weatherIconYellowColor = Color(0xFFFFF3CC);
   static const Color weatherIconBlueColor = Color(0xFFE4ECFF);
 
+  // ICON SVG COLOR
+  static const Color weatherIconDarkYellowColor = Color(0xFFFFB800);
+  static const Color weatherIconDarkBlueColor = Color(0xFF2F6BFF);
+
   static const Color homeScreenBg = Color(0xFFF3F7FF);
+
+  // City detail + favourites screens
+  static const Color heroGradientStart = Color(0xFF4B80FF);
+  static const Color heroGradientEnd = Color(0xFF1F45D6);
+  static const Color cardShadowColor = Color(0x142F6BFF);
+  static const Color dangerColor = Color(0xFFE5484D);
+  static const Color dangerBg = Color(0xFFFFE5E7);
+  static const Color noticeBg = Color(0xFFFFEFC2);
+  static const Color noticeText = Color(0xFF9A4B00);
 }

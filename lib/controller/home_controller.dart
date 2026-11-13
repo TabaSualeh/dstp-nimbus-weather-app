@@ -6,7 +6,7 @@ import 'package:nimbus/constants/api_constants.dart';
 import 'package:nimbus/controller/api_controller.dart';
 
 import '../model/cities_model.dart';
-import '../model/ciy_model.dart';
+import '../model/city_model.dart';
 
 class HomeController extends GetxController {
   RxList<dynamic> regions = [].obs;
@@ -43,14 +43,6 @@ class HomeController extends GetxController {
     // TODO: implement onReady
     super.onReady();
   }
-
-  // searchQuery(String value) async {
-  //   searchText.value = value;
-  //   searchTimer?.cancel();
-  //   searchTimer = Timer(Duration(milliseconds: 1000), () async {
-  //     await getAllCities(reset: true);
-  //   });
-  // }
 
   getAllCities({bool reset = false}) async {
     Map<String, String> queryParams = {};

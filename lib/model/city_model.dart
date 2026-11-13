@@ -7,6 +7,8 @@ class City {
   String? region;
   String? tagline;
   int? population;
+  Coordinates? coordinates;
+  String? timezone;
   Weather? weather;
 
   City({
@@ -16,6 +18,8 @@ class City {
     this.region,
     this.tagline,
     this.population,
+    this.coordinates,
+    this.timezone,
     this.weather,
   });
 
@@ -26,6 +30,8 @@ class City {
     region: json["region"],
     tagline: json["tagline"],
     population: json["population"],
+    coordinates: json["coordinates"] == null ? null : Coordinates.fromJson(json["coordinates"]),
+    timezone: json["timezone"],
     weather: json["weather"] == null ? null : Weather.fromJson(json["weather"]),
   );
 
@@ -36,6 +42,28 @@ class City {
     "region": region,
     "tagline": tagline,
     "population": population,
+    "coordinates": coordinates?.toJson(),
+    "timezone": timezone,
     "weather": weather?.toJson(),
+  };
+}
+
+class Coordinates {
+  double? lat;
+  double? lon;
+
+  Coordinates({
+    this.lat,
+    this.lon,
+  });
+
+  factory Coordinates.fromJson(Map<String, dynamic> json) => Coordinates(
+    lat: (json["lat"] as num?)?.toDouble(),
+    lon: (json["lon"] as num?)?.toDouble(),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "lat": lat,
+    "lon": lon,
   };
 }

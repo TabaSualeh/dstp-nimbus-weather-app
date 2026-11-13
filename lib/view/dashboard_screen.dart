@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nimbus/controller/home_controller.dart';
+import 'package:nimbus/view/favorites_screen.dart';
 import 'package:nimbus/view/profile_screen.dart';
 
 import '../constants/app_colors.dart';
 import '../model/user_model.dart';
-import 'favourites_screen.dart';
 import 'home_screen.dart';
 
 class DashboardScreen extends StatefulWidget {

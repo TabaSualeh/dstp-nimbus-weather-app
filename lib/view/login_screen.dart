@@ -86,8 +86,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nimbus/constants/app_assets.dart';
 import 'package:nimbus/controller/auth_controller.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_routes.dart';
@@ -103,9 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController(text: 'demo@nimbus.app');
   final _passwordController = TextEditingController(text: 'demo1234');
 
-  AuthController authController = Get.isRegistered<AuthController>()
-      ? Get.find<AuthController>()
-      : Get.put(AuthController());
+  AuthController authController = Get.isRegistered<AuthController>() ? Get.find<AuthController>() : Get.put(AuthController());
 
   InputDecoration _fieldDecoration(String hint, {Widget? suffixIcon}) {
     final border = OutlineInputBorder(
@@ -160,15 +160,22 @@ class _LoginScreenState extends State<LoginScreen> {
                     Container(
                       width: 56,
                       height: 56,
+                      padding: EdgeInsets.all(9),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(18),
                         color: AppColors.loginScreenIconBg,
                       ),
-                      child: Icon(
-                        Icons.wb_sunny_outlined,
-                        color: AppColors.splashScreenPrimaryText,
-                        size: 30,
+                      child: SvgPicture.asset(
+                        AppAssets.sunSvg,
+                        // color: Colors.white,
+                        colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
                       ),
+
+                      // Icon(
+                      //   Icons.wb_sunny_outlined,
+                      //   color: AppColors.splashScreenPrimaryText,
+                      //   size: 30,
+                      // ),
                     ),
                     const SizedBox(height: 28),
 
@@ -218,9 +225,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           suffixIcon: IconButton(
                             onPressed: authController.changeObscure,
                             icon: Icon(
-                              authController.obscurePassword.value
-                                  ? Icons.remove_red_eye_outlined
-                                  : Icons.visibility_off_outlined,
+                              authController.obscurePassword.value ? Icons.remove_red_eye_outlined : Icons.visibility_off_outlined,
                               color: AppColors.loginScreenSecondaryText,
                             ),
                           ),
@@ -237,8 +242,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 54,
                         child: ElevatedButton(
                           onPressed: () {
-                            if (_emailController.text.isEmpty ||
-                                _passwordController.text.isEmpty) {
+                            if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
                               Get.snackbar(
                                 "Error",
                                 "Email and Password are required",
@@ -269,20 +273,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                       height: 20,
                                       child: CircularProgressIndicator(
                                         strokeWidth: 2,
-                                        backgroundColor: AppColors
-                                            .splashScreenPrimaryText
-                                            .withValues(alpha: 0.25),
-                                        valueColor:
-                                            const AlwaysStoppedAnimation<Color>(
-                                              AppColors.splashScreenPrimaryText,
-                                            ),
+                                        backgroundColor: AppColors.splashScreenPrimaryText.withValues(alpha: 0.25),
+                                        valueColor: const AlwaysStoppedAnimation<Color>(
+                                          AppColors.splashScreenPrimaryText,
+                                        ),
                                       ),
                                     ),
                                     const Text(
                                       "Logging in..",
                                       style: TextStyle(
-                                        color:
-                                            AppColors.splashScreenPrimaryText,
+                                        color: AppColors.splashScreenPrimaryText,
                                         fontSize: 18,
                                       ),
                                     ),

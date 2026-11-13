@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:nimbus/constants/api_constants.dart';
 import 'package:nimbus/controller/api_controller.dart';
 import 'package:nimbus/controller/home_controller.dart';
+import 'package:nimbus/view/city_details_screen.dart';
 import 'package:nimbus/widget/region_card_shimmer.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -284,6 +286,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           return GestureDetector(
                             onTap: () {
                               print("CITY DATA======> $city");
+                              Get.to(() => CityDetailScreen(data: city));
                             },
                             child: Container(
                               margin: const EdgeInsets.only(bottom: 14),
@@ -304,15 +307,31 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                       borderRadius: BorderRadius.circular(16),
                                     ),
-                                    child: Image.asset(
+                                    child: SvgPicture.asset(
                                       appModel.getWeatherIcon(
                                         appModel.getWeatherEnum(
                                           city.weather!.condition!.icon!,
                                         ),
                                       ),
-                                      height: 28,
-                                      width: 28,
+                                      // colorFilter: ColorFilter.mode(
+                                      //   appModel.getWeatherIconColor(
+                                      //     appModel.getWeatherEnum(
+                                      //       city.weather!.condition!.icon!,
+                                      //     ),
+                                      //   ),
+                                      //   BlendMode.srcIn,
+                                      // ),
                                     ),
+
+                                    // Image.asset(
+                                    //   appModel.getWeatherIcon(
+                                    //     appModel.getWeatherEnum(
+                                    //       city.weather!.condition!.icon!,
+                                    //     ),
+                                    //   ),
+                                    //   height: 28,
+                                    //   width: 28,
+                                    // ),
                                   ),
 
                                   const SizedBox(width: 14),

@@ -57,13 +57,26 @@ class AppModel extends GetxController {
   String getWeatherIcon(WeatherEnum weatherData) {
     switch (weatherData) {
       case WeatherEnum.sun:
-        return AppAssets.yellowSunIcon;
+        return AppAssets.sunSvg;
       case WeatherEnum.cloud:
-        return AppAssets.cloudIcon;
+        return AppAssets.cloudSvg;
       case WeatherEnum.cloudRain:
-        return AppAssets.cloudRainIcon;
+        return AppAssets.rainSvg;
       case WeatherEnum.cloudSun:
-        return AppAssets.cloudSunIcon;
+        return AppAssets.cloudSunSvg;
+    }
+  }
+
+  Color getWeatherIconColor(WeatherEnum weatherData) {
+    switch (weatherData) {
+      case WeatherEnum.sun:
+        return AppColors.weatherIconDarkYellowColor;
+      case WeatherEnum.cloud:
+        return AppColors.weatherIconDarkBlueColor;
+      case WeatherEnum.cloudRain:
+        return AppColors.weatherIconDarkBlueColor;
+      case WeatherEnum.cloudSun:
+        return AppColors.weatherIconDarkYellowColor;
     }
   }
 
