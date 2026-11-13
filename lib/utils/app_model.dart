@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nimbus/model/app_enums.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -77,6 +78,50 @@ class AppModel extends GetxController {
         return AppColors.weatherIconDarkBlueColor;
       case WeatherEnum.cloudSun:
         return AppColors.weatherIconDarkYellowColor;
+    }
+  }
+
+  LinearGradient getWeatherGradient(WeatherEnum weatherData) {
+    switch (weatherData) {
+      case WeatherEnum.sun:
+        return const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFFFFC94A),
+            Color(0xFFF59E0B),
+          ],
+        );
+
+      case WeatherEnum.cloud:
+        return const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppColors.heroGradientStart,
+            AppColors.heroGradientEnd,
+          ],
+        );
+
+      case WeatherEnum.cloudRain:
+        return const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF60A5FA),
+            Color(0xFF1D4ED8),
+          ],
+        );
+
+      case WeatherEnum.cloudSun:
+        return const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppColors.heroGradientStart,
+            AppColors.heroGradientEnd,
+          ],
+        );
     }
   }
 

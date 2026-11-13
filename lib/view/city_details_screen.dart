@@ -127,27 +127,12 @@ class _CityDetailScreenState extends State<CityDetailScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(22),
                 decoration: BoxDecoration(
-                  color: appModel.getWeatherIconColor(
+                  gradient: appModel.getWeatherGradient(
                     appModel.getWeatherEnum(
                       widget.data.weather!.condition!.icon!,
                     ),
                   ),
-                  // gradient: const LinearGradient(
-                  //   begin: Alignment.topLeft,
-                  //   end: Alignment.bottomRight,
-                  //   colors: [
-                  //     AppColors.heroGradientStart,
-                  //     AppColors.heroGradientEnd,
-                  //   ],
-                  // ),
                   borderRadius: BorderRadius.circular(28),
-                  // boxShadow: const [
-                  //   BoxShadow(
-                  //     color: Color(0x402F6BFF),
-                  //     blurRadius: 28,
-                  //     offset: Offset(0, 14),
-                  //   ),
-                  // ],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
